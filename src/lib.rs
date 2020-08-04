@@ -1,44 +1,9 @@
 #![no_std]
 
-// UART
-
-#[macro_export]
-macro_rules! uart {
-    ($(
-        $UARTX:ident: $PACUARTX:ty,
-    )+) => {
-        $(
-            pub struct $UARTX {
-                pub registers: $PACUARTX,
-            }
-
-            impl embedded_hal::serial::Write<u8> for $UARTX {
-                type Error = core::convert::Infallible;
-
-                fn write(&mut self, word: u8) -> nb::Result<(), Self::Error> {
-                    // Wait until TXFULL is `0`
-                    if self.registers.txfull.read().bits() != 0 {
-                        Err(nb::Error::WouldBlock)
-                    } else {
-                        unsafe {
-                            self.registers.rxtx.write(|w| w.rxtx().bits(word.into()));
-                        }
-                        Ok(())
-                    }
-                }
-                fn flush(&mut self) -> nb::Result<(), Self::Error> {
-                    if self.registers.txempty.read().bits() != 0 {
-                        Ok(())
-                    } else {
-                        Err(nb::Error::WouldBlock)
-                    }
-                }
-            }
-
-            impl embedded_hal::blocking::serial::write::Default<u8> for $UARTX {}
-        )+
-    }
-}
+#[cfg(feature = "oled_spi")]
+pub mod spi;
+#[cfg(feature = "uart")]
+pub mod uart;
 
 // GPIO
 
@@ -96,51 +61,6 @@ macro_rules! gpio {
 
             /// Opt-in to the software implementation.
             impl embedded_hal::digital::v2::toggleable::Default for $GPIOX {}
-        )+
-    }
-}
-
-// SPI
-
-#[macro_export]
-macro_rules! spi {
-    ($(
-        $SPIX:ident: ($PACSPIX:ty, $WORD:ty),
-    )+) => {
-        $(
-            pub struct $SPIX {
-                pub registers: $PACSPIX,
-            }
-
-            impl embedded_hal::spi::FullDuplex<$WORD> for $SPIX {
-                type Error = core::convert::Infallible;
-
-                fn read(&mut self) -> nb::Result<$WORD, Self::Error> {
-                    if self.registers.status.read().done().bit() {
-                        Ok(self.registers.miso.read().bits() as $WORD)
-                    } else {
-                        Err(nb::Error::WouldBlock)
-                    }
-                }
-
-                fn send(&mut self, word: u8) -> nb::Result<(), Self::Error> {
-                    if self.registers.status.read().done().bit() {
-                        unsafe {
-                            self.registers.mosi.write(|w| w.bits(word.into()));
-                            self.registers.control.write(|w| {
-                                w.length().bits(8).start().bit(true)
-                            });
-                        }
-                        Ok(())
-                    } else {
-                        Err(nb::Error::WouldBlock)
-                    }
-                }
-            }
-
-            impl embedded_hal::blocking::spi::write::Default<u8> for $SPIX {}
-            //impl embedded_hal::blocking::spi::write_iter::Default<u8> for $SPIX {}
-            impl embedded_hal::blocking::spi::transfer::Default<u8> for $SPIX {}
         )+
     }
 }

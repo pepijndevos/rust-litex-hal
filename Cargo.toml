@@ -5,3 +5,11 @@ authors = ["Pepijn de Vos <pepijndevos@gmail.com>"]
 edition = "2018"
 
 [dependencies]
+litex-pac = { path = "../litex-pac" }
+embedded-hal = "0.2.4"
+nb = "0.1.1"
+
+[features]
+default = ["uart", "oled_spi"]
+uart = []
+oled_spi = []
