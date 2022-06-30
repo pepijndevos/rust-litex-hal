@@ -36,6 +36,14 @@ macro_rules! uart {
             }
 
             impl embedded_hal::blocking::serial::write::Default<u8> for $UARTX {}
+
+            impl core::fmt::Write for $UARTX {
+                fn write_str(&mut self, s: &str) -> core::fmt::Result {
+                    use embedded_hal::prelude::*;
+                    self.bwrite_all(s.as_bytes()).ok();
+                    Ok(())
+                }
+            }
         )+
     }
 }
@@ -146,7 +154,6 @@ macro_rules! spi {
 }
 
 // Delay
-
 
 #[macro_export]
 macro_rules! timer {
