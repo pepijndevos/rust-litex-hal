@@ -9,7 +9,17 @@ macro_rules! uart {
     )+) => {
         $(
             pub struct $UARTX {
-                pub registers: $PACUARTX,
+                registers: $PACUARTX,
+            }
+
+            impl $UARTX {
+                pub fn new(registers: $PACUARTX) -> Self {
+                    Self { registers }
+                }
+
+                pub fn free(self) -> $PACUARTX {
+                    self.registers
+                }
             }
 
             impl embedded_hal::serial::Write<u8> for $UARTX {
@@ -58,6 +68,12 @@ macro_rules! gpio {
         $(
             pub struct $GPIOX {
                 pub index: usize,
+            }
+
+            impl $GPIOX {
+                pub fn new(index: usize) -> Self {
+                    Self { index }
+                }
             }
 
             impl embedded_hal::digital::v2::OutputPin for $GPIOX {
@@ -117,7 +133,17 @@ macro_rules! spi {
     )+) => {
         $(
             pub struct $SPIX {
-                pub registers: $PACSPIX,
+                registers: $PACSPIX,
+            }
+
+            impl $SPIX {
+                pub fn new(registers: $PACSPIX) -> Self {
+                    Self { registers }
+                }
+
+                pub fn free(self) -> $PACSPIX {
+                    self.registers
+                }
             }
 
             impl embedded_hal::spi::FullDuplex<$WORD> for $SPIX {
@@ -162,8 +188,18 @@ macro_rules! timer {
     )+) => {
         $(
             pub struct $TIMERX {
-                pub registers: $PACTIMERX,
+                registers: $PACTIMERX,
                 pub sys_clk: u32,
+            }
+
+            impl $TIMERX {
+                pub fn new(registers: $PACTIMERX, sys_clk: u32) -> Self {
+                    Self { registers, sys_clk }
+                }
+
+                pub fn free(self) -> $PACTIMERX {
+                    self.registers
+                }
             }
 
             impl<UXX: core::convert::Into<u32>> embedded_hal::blocking::delay::DelayMs<UXX> for $TIMERX {
