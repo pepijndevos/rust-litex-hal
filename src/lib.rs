@@ -173,7 +173,6 @@ macro_rules! spi {
             }
 
             impl embedded_hal::blocking::spi::write::Default<u8> for $SPIX {}
-            //impl embedded_hal::blocking::spi::write_iter::Default<u8> for $SPIX {}
             impl embedded_hal::blocking::spi::transfer::Default<u8> for $SPIX {}
         )+
     }
@@ -203,8 +202,6 @@ macro_rules! timer {
             }
 
             impl<UXX: core::convert::Into<u32>> embedded_hal::blocking::delay::DelayMs<UXX> for $TIMERX {
-                //type Error = Infallible;
-
                 fn delay_ms(&mut self, ms: UXX) -> () {
                     let value: u32 = self.sys_clk / 1_000 * ms.into();
                     unsafe {
