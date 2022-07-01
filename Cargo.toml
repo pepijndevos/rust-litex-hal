@@ -3,5 +3,4 @@ name = "litex-hal"
 version = "0.1.0"
 authors = ["Pepijn de Vos <pepijndevos@gmail.com>"]
 edition = "2021"
-
-[dependencies]
+license = "Apache-2.0"
