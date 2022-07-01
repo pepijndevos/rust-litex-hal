@@ -55,6 +55,12 @@ macro_rules! uart {
                     Ok(())
                 }
             }
+
+            impl From<$PACUARTX> for $UARTX {
+                fn from(registers: $PACUARTX) -> $UARTX {
+                    $UARTX::new(registers)
+                }
+            }
         )+
     }
 }
@@ -177,6 +183,12 @@ macro_rules! spi {
 
             impl embedded_hal::blocking::spi::write::Default<u8> for $SPIX {}
             impl embedded_hal::blocking::spi::transfer::Default<u8> for $SPIX {}
+
+            impl From<$PACSPIX> for $SPIX {
+                fn from(registers: $PACSPIX) -> $SPIX {
+                    $SPIX::new(registers)
+                }
+            }
         )+
     }
 }
