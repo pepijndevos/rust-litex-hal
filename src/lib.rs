@@ -8,6 +8,7 @@ macro_rules! uart {
         $UARTX:ident: $PACUARTX:ty,
     )+) => {
         $(
+            #[derive(Debug)]
             pub struct $UARTX {
                 registers: $PACUARTX,
             }
@@ -66,6 +67,7 @@ macro_rules! gpio {
         $GPIOX:ident: $PACGPIOX:ty,
     )+) => {
         $(
+            #[derive(Debug)]
             pub struct $GPIOX {
                 pub index: usize,
             }
@@ -132,6 +134,7 @@ macro_rules! spi {
         $SPIX:ident: ($PACSPIX:ty, $WORD:ty),
     )+) => {
         $(
+            #[derive(Debug)]
             pub struct $SPIX {
                 registers: $PACSPIX,
             }
@@ -186,6 +189,7 @@ macro_rules! timer {
         $TIMERX:ident: $PACTIMERX:ty,
     )+) => {
         $(
+            #[derive(Debug)]
             pub struct $TIMERX {
                 registers: $PACTIMERX,
                 pub sys_clk: u32,
