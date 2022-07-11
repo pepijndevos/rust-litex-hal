@@ -13,5 +13,12 @@ bench = false
 nb = "1.0"
 embedded-hal = { version = "0.2" }
 
+[dev-dependencies]
+litex-sim-pac = { path = "litex-sim-pac" }
+panic-halt = "0.2.0"
+
 [features]
 gpio = ["embedded-hal/unproven"]
+
+[workspace]
+members = ["litex-sim-pac"]

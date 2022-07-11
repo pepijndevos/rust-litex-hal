@@ -1,0 +1,22 @@
+[advisories]
+unmaintained = "deny"
+yanked = "deny"
+notice = "deny"
+
+[licenses]
+copyleft = "deny"
+allow-osi-fsf-free = "either"
+
+[[licenses.clarify]]
+name = "stretch"
+expression = "MIT"
+license-files = []
+
+[bans]
+multiple-versions = "allow"
+wildcards = "allow" # Change to deny after removing allow-git
+
+[sources]
+unknown-registry = "deny"
+unknown-git = "deny"
+allow-git = ["https://github.com/pepijndevos/rust-litex-hal"]
