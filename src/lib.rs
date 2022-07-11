@@ -1,5 +1,6 @@
 #![no_std]
 
+#[cfg(feature = "gpio")]
 pub mod gpio;
 pub mod spi;
 pub mod timer;
