@@ -15,7 +15,7 @@ macro_rules! gpio {
                 }
             }
 
-            impl embedded_hal::digital::v2::OutputPin for $GPIOX {
+            impl $crate::hal::digital::v2::OutputPin for $GPIOX {
                 type Error = core::convert::Infallible;
 
                 fn set_low(&mut self) -> Result<(), Self::Error> {
@@ -42,7 +42,7 @@ macro_rules! gpio {
                 }
             }
 
-            impl embedded_hal::digital::v2::StatefulOutputPin for $GPIOX {
+            impl $crate::hal::digital::v2::StatefulOutputPin for $GPIOX {
                 fn is_set_low(&self) -> Result<bool, Self::Error> {
                     let reg = unsafe { &*<$PACGPIOX>::ptr() };
                     let mask: u32 = 1 << self.index;
@@ -58,7 +58,7 @@ macro_rules! gpio {
             }
 
             /// Opt-in to the software implementation.
-            impl embedded_hal::digital::v2::toggleable::Default for $GPIOX {}
+            impl $crate::hal::digital::v2::toggleable::Default for $GPIOX {}
         )+
     }
 }
