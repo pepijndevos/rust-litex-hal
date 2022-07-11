@@ -19,13 +19,13 @@ macro_rules! uart {
                 }
             }
 
-            impl embedded_hal::serial::Write<u8> for $UARTX {
+            impl $crate::hal::serial::Write<u8> for $UARTX {
                 type Error = core::convert::Infallible;
 
-                fn write(&mut self, word: u8) -> nb::Result<(), Self::Error> {
+                fn write(&mut self, word: u8) -> $crate::nb::Result<(), Self::Error> {
                     // Wait until TXFULL is `0`
                     if self.registers.txfull.read().bits() != 0 {
-                        Err(nb::Error::WouldBlock)
+                        Err($crate::nb::Error::WouldBlock)
                     } else {
                         unsafe {
                             self.registers.rxtx.write(|w| w.rxtx().bits(word.into()));
@@ -33,20 +33,20 @@ macro_rules! uart {
                         Ok(())
                     }
                 }
-                fn flush(&mut self) -> nb::Result<(), Self::Error> {
+                fn flush(&mut self) -> $crate::nb::Result<(), Self::Error> {
                     if self.registers.txempty.read().bits() != 0 {
                         Ok(())
                     } else {
-                        Err(nb::Error::WouldBlock)
+                        Err($crate::nb::Error::WouldBlock)
                     }
                 }
             }
 
-            impl embedded_hal::blocking::serial::write::Default<u8> for $UARTX {}
+            impl $crate::hal::blocking::serial::write::Default<u8> for $UARTX {}
 
             impl core::fmt::Write for $UARTX {
                 fn write_str(&mut self, s: &str) -> core::fmt::Result {
-                    use embedded_hal::prelude::*;
+                    use $crate::hal::prelude::*;
                     self.bwrite_all(s.as_bytes()).ok();
                     Ok(())
                 }

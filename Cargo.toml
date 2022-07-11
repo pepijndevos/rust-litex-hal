@@ -4,3 +4,7 @@ version = "0.1.0"
 authors = ["Pepijn de Vos <pepijndevos@gmail.com>"]
 edition = "2021"
 license = "Apache-2.0"
+
+[dependencies]
+nb = "1.0"
+embedded-hal = { version = "0.2" }

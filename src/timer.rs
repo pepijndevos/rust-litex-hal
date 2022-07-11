@@ -20,7 +20,7 @@ macro_rules! timer {
                 }
             }
 
-            impl<UXX: core::convert::Into<u32>> embedded_hal::blocking::delay::DelayMs<UXX> for $TIMERX {
+            impl<UXX: core::convert::Into<u32>> $crate::hal::blocking::delay::DelayMs<UXX> for $TIMERX {
                 fn delay_ms(&mut self, ms: UXX) -> () {
                     let value: u32 = self.sys_clk / 1_000 * ms.into();
                     unsafe {

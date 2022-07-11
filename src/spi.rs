@@ -19,18 +19,18 @@ macro_rules! spi {
                 }
             }
 
-            impl embedded_hal::spi::FullDuplex<$WORD> for $SPIX {
+            impl $crate::hal::spi::FullDuplex<$WORD> for $SPIX {
                 type Error = core::convert::Infallible;
 
-                fn read(&mut self) -> nb::Result<$WORD, Self::Error> {
+                fn read(&mut self) -> $crate::nb::Result<$WORD, Self::Error> {
                     if self.registers.status.read().done().bit() {
                         Ok(self.registers.miso.read().bits() as $WORD)
                     } else {
-                        Err(nb::Error::WouldBlock)
+                        Err($crate::nb::Error::WouldBlock)
                     }
                 }
 
-                fn send(&mut self, word: u8) -> nb::Result<(), Self::Error> {
+                fn send(&mut self, word: u8) -> $crate::nb::Result<(), Self::Error> {
                     if self.registers.status.read().done().bit() {
                         unsafe {
                             self.registers.mosi.write(|w| w.bits(word.into()));
@@ -40,13 +40,13 @@ macro_rules! spi {
                         }
                         Ok(())
                     } else {
-                        Err(nb::Error::WouldBlock)
+                        Err($crate::nb::Error::WouldBlock)
                     }
                 }
             }
 
-            impl embedded_hal::blocking::spi::write::Default<u8> for $SPIX {}
-            impl embedded_hal::blocking::spi::transfer::Default<u8> for $SPIX {}
+            impl $crate::hal::blocking::spi::write::Default<u8> for $SPIX {}
+            impl $crate::hal::blocking::spi::transfer::Default<u8> for $SPIX {}
 
             impl From<$PACSPIX> for $SPIX {
                 fn from(registers: $PACSPIX) -> $SPIX {
