@@ -46,5 +46,13 @@ jobs:
       - name: Clone repo
         uses: actions/checkout@v3
 
+      - name: Cache crates
+        uses: Swatinem/rust-cache@v1
+
+      - name: Install Taplo
+        run: cargo install taplo-cli
+
       - name: Format
-        run: cargo fmt --check
+        run: |
+          cargo fmt --check
+          taplo fmt --check
