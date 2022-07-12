@@ -38,6 +38,10 @@ sudo pacman -S python
 sudo apt install python3
 ```
 
+* Universal LiteX script
+
+[Official instructions](https://github.com/enjoy-digital/litex#quick-start-guide).
+
 #### LiteX
 
 To build cores and optionally simulate it using [verilator](#verilator).
