@@ -3,7 +3,14 @@ default_to_workspace = false
 
 [tasks.objcopy]
 command = "cargo"
-args = ["objcopy", "${@}", "--", "-O", "binary", "${CARGO_MAKE_CRATE_CUSTOM_TRIPLE_TARGET_DIRECTORY}/litex-sim-firmware.bin"]
+args = [
+  "objcopy",
+  "${@}",
+  "--",
+  "-O",
+  "binary",
+  "${CARGO_MAKE_CRATE_CUSTOM_TRIPLE_TARGET_DIRECTORY}/litex-sim-firmware.bin",
+]
 
 [tasks.simulate]
 command = "litex_sim"
