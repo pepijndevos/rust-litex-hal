@@ -15,7 +15,7 @@ bench = false
 bare-metal = "1.0"
 riscv = "0.8"
 vcell = "0.1"
-riscv-rt = { optional = true, version = "0.8" }
+riscv-rt = { optional = true, version = "0.9" }
 
 [build-dependencies]
 svd2rust = { version = "0.24", default-features = false }
