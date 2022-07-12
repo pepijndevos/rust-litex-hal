@@ -42,19 +42,7 @@ sudo apt install python3
 
 To build cores and optionally simulate it using [verilator](#verilator).
 
-```bash
-# Optionally, you can install this packages into a separate environment
-virtualenv litex
-source litex/bin/activate
-
-# will download the latest LiteX packages (from Git) and add them to your Python environment:
-cd folder_for_litex
-wget https://raw.githubusercontent.com/enjoy-digital/litex/master/litex_setup.py
-chmod +x litex_setup.py
-./litex_setup.py --init --install --user
-```
-
-Commands are taken from the [official LiteX quick start guide](https://github.com/enjoy-digital/litex#quick-start-guide).
+[Official instructions](https://github.com/enjoy-digital/litex#quick-start-guide).
 
 ### Simulation on litex_sim
 
