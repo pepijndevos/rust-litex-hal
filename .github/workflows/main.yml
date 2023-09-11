@@ -37,7 +37,7 @@ jobs:
           ./litex_setup.py --init --install --user
 
       - name: Clippy
-        run: cargo clippy --no-deps --examples --all-features -- -D warnings
+        run: cargo clippy --target riscv32i-unknown-none-elf --no-deps --examples --all-features -- -D warnings
 
   format:
     name: Format
