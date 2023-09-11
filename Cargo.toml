@@ -24,4 +24,4 @@ panic-halt = "0.2.0"
 gpio = ["embedded-hal/unproven"]
 
 [workspace]
-members = ["litex-sim-pac"]
+members = ["litex-sim-pac", "xtask"]

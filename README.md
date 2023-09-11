@@ -84,52 +84,12 @@ sudo pacman -S verilator
 sudo apt install verilator
 ```
 
-#### LLVM tools
-
-LLVM tools, needed to convert the example from ELF to BIN.
-
-```bash
-rustup component add llvm-tools-preview
-```
-
-#### cargo-make
-
-Rust task runner and build tool, needed to automate simulation.
-
-* Cargo:
-
-```bash
-cargo install --no-default-features cargo-make
-```
-
-* ArchLinux (from AUR):
-
-```bash
-paru -S cargo-make
-```
-
-#### cargo-binutils
-
-Cargo subcommands to invoke the LLVM tools, needed to convert the example from ELF to BIN.
-
-* Cargo:
-
-```bash
-cargo install cargo-binutils
-```
-
-* ArchLinux (from AUR):
-
-```bash
-paru -S cargo-binutils
-```
-
 ## Simulation
 
 To run the simulation execute the following command:
 
 ```bash
-cargo make simulate --example counter
+cargo xtask simulate --example counter
 ```
 
-You can pass additional Cargo flags such as `--release` at the end of the simulation command.
+You can also pass `--release` to the simulation command.
