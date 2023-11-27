@@ -24,17 +24,17 @@ macro_rules! uart {
 
                 fn write(&mut self, word: u8) -> $crate::nb::Result<(), Self::Error> {
                     // Wait until TXFULL is `0`
-                    if self.registers.txfull.read().bits() != 0 {
+                    if self.registers.txfull().read().bits() != 0 {
                         Err($crate::nb::Error::WouldBlock)
                     } else {
                         unsafe {
-                            self.registers.rxtx.write(|w| w.rxtx().bits(word.into()));
+                            self.registers.rxtx().write(|w| w.rxtx().bits(word.into()));
                         }
                         Ok(())
                     }
                 }
                 fn flush(&mut self) -> $crate::nb::Result<(), Self::Error> {
-                    if self.registers.txempty.read().bits() != 0 {
+                    if self.registers.txempty().read().bits() != 0 {
                         Ok(())
                     } else {
                         Err($crate::nb::Error::WouldBlock)
