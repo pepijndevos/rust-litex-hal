@@ -13,7 +13,6 @@ macro_rules! uart {
                 pub fn new(registers: $PACUARTX) -> Self {
                     registers.ev_enable().write(|w| {
                         w.rx().set_bit()
-                        // w.tx().set_bit()
                     });
                     Self { registers }
                 }
@@ -50,13 +49,15 @@ macro_rules! uart {
                 type Error = core::convert::Infallible;
                 
                 fn read(&mut self) -> $crate::nb::Result<u8, Self::Error> {
+                    // Wait until RXEMPTY is `0`
                     if self.registers.rxempty().read().bits() != 0 {
                         Err($crate::nb::Error::WouldBlock)
                     } else {
-                        self.registers.ev_pending().write(|w| w.rx().set_bit());
-                        unsafe {
+                        let result = unsafe {
                             Ok(self.registers.rxtx().read().bits() as u8)
                         }
+                        self.registers.ev_pending().write(|w| w.rx().set_bit());
+                        return result;
                     }
                 }
             }
