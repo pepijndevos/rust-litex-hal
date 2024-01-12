@@ -50,7 +50,7 @@ macro_rules! uart {
                         Err($crate::nb::Error::WouldBlock)
                     } else {
                         unsafe {
-                            Ok(self.registers.rxtx().read().bits())
+                            Ok(self.registers.rxtx().read().bits() as u8)
                         }
                     }
                 }
