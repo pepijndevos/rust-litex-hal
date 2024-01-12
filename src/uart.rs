@@ -41,10 +41,10 @@ macro_rules! uart {
                     }
                 }
             }
-            
+
             impl $crate::hal::serial::Read<u8> for $UARTX {
                 type Error = core::convert::Infallible;
-                
+
                 fn read(&mut self) -> $crate::nb::Result<u8, Self::Error> {
                     // Wait until RXEMPTY is `0`
                     if self.registers.rxempty().read().bits() != 0 {
