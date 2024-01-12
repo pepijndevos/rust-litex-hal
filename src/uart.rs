@@ -42,6 +42,23 @@ macro_rules! uart {
                 }
             }
 
+            impl $crate::hal::serial::Read<u8> for $UARTX {
+                type Error = core::convert::Infallible;
+
+                fn read(&mut self) -> $crate::nb::Result<u8, Self::Error> {
+                    // Wait until RXEMPTY is `0`
+                    if self.registers.rxempty().read().bits() != 0 {
+                        Err($crate::nb::Error::WouldBlock)
+                    } else {
+                        let result = unsafe {
+                            Ok(self.registers.rxtx().read().bits() as u8)
+                        };
+                        self.registers.ev_pending().write(|w| w.rx().set_bit());
+                        return result;
+                    }
+                }
+            }
+
             impl $crate::hal::blocking::serial::write::Default<u8> for $UARTX {}
 
             impl core::fmt::Write for $UARTX {
