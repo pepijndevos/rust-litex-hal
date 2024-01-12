@@ -11,9 +11,6 @@ macro_rules! uart {
 
             impl $UARTX {
                 pub fn new(registers: $PACUARTX) -> Self {
-                    registers.ev_enable().write(|w| {
-                        w.rx().set_bit()
-                    });
                     Self { registers }
                 }
 
@@ -55,7 +52,7 @@ macro_rules! uart {
                     } else {
                         let result = unsafe {
                             Ok(self.registers.rxtx().read().bits() as u8)
-                        }
+                        };
                         self.registers.ev_pending().write(|w| w.rx().set_bit());
                         return result;
                     }
