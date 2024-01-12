@@ -11,6 +11,10 @@ macro_rules! uart {
 
             impl $UARTX {
                 pub fn new(registers: $PACUARTX) -> Self {
+                    registers.ev_enable().write(|w| {
+                        w.rx().set_bit()
+                        // w.tx().set_bit()
+                    });
                     Self { registers }
                 }
 
@@ -49,6 +53,7 @@ macro_rules! uart {
                     if self.registers.rxempty().read().bits() != 0 {
                         Err($crate::nb::Error::WouldBlock)
                     } else {
+                        self.registers.ev_pending().write(|w| w.rx().set_bit());
                         unsafe {
                             Ok(self.registers.rxtx().read().bits() as u8)
                         }
