@@ -14,7 +14,7 @@ bench = false
 
 [dependencies]
 nb = "1.0"
-embedded-hal = { version = "0.2" }
+embedded-hal = { version = "1.0" }
 
 [dev-dependencies]
 litex-sim-pac = { path = "litex-sim-pac" }
