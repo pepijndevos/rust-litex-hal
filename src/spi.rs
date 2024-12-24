@@ -23,18 +23,18 @@ macro_rules! spi {
                 type Error = core::convert::Infallible;
 
                 fn read(&mut self) -> $crate::nb::Result<$WORD, Self::Error> {
-                    if self.registers.status.read().done().bit() {
-                        Ok(self.registers.miso.read().bits() as $WORD)
+                    if self.registers.status().read().done().bit() {
+                        Ok(self.registers.miso().read().bits() as $WORD)
                     } else {
                         Err($crate::nb::Error::WouldBlock)
                     }
                 }
 
                 fn send(&mut self, word: u8) -> $crate::nb::Result<(), Self::Error> {
-                    if self.registers.status.read().done().bit() {
+                    if self.registers.status().read().done().bit() {
                         unsafe {
-                            self.registers.mosi.write(|w| w.bits(word.into()));
-                            self.registers.control.write(|w| {
+                            self.registers.mosi().write(|w| w.bits(word.into()));
+                            self.registers.control().write(|w| {
                                 w.length().bits(8).start().bit(true)
                             });
                         }
