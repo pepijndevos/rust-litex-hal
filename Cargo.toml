@@ -14,14 +14,13 @@ bench = false
 
 [dependencies]
 nb = "1.0"
-embedded-hal = { version = "0.2" }
+embedded-hal = { version = "1.0" }
+embedded-io = "0.6.1"
 
 [dev-dependencies]
 litex-sim-pac = { path = "litex-sim-pac" }
 panic-halt = "0.2.0"
 
-[features]
-gpio = ["embedded-hal/unproven"]
 
 [workspace]
 members = ["litex-sim-pac", "xtask"]
