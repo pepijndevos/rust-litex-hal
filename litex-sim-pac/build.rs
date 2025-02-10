@@ -16,14 +16,13 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     println!("cargo:rustc-link-search={out_dir}"); // Let linker find the generated linker script
 
+    let mut config = Config::default();
+    config.target = Target::RISCV;
+    config.make_mod = true;
     // Generate the svd file to a string in RAM
     let mut generation = svd2rust::generate(
         fs::read_to_string(format!("{out_dir}/{SVD_NAME}"))?.as_str(),
-        &Config {
-            target: Target::RISCV,
-            make_mod: true,
-            ..Default::default()
-        },
+        &config
     )?;
 
     // Add newlines as the svd2rust utility do

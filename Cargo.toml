@@ -19,7 +19,7 @@ embedded-io = "0.6.1"
 
 [dev-dependencies]
 litex-sim-pac = { path = "litex-sim-pac" }
-panic-halt = "0.2.0"
+panic-halt = "1.0.0"
 
 
 [workspace]
