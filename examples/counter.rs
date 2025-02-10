@@ -1,9 +1,9 @@
 #![no_std]
 #![no_main]
 
+use embedded_hal::delay::DelayNs;
 use litex_hal::hal_io::Write;
 use litex_sim_pac::{riscv_rt::entry, Peripherals};
-use embedded_hal::delay::DelayNs;
 use panic_halt as _;
 
 litex_hal::uart! {
