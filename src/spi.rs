@@ -36,7 +36,7 @@ macro_rules! spi {
                     self.registers
                 }
 
-                fn write_one(&mut self, word: &u8) -> Result<(), SpiError> {
+                fn write_one(&mut self, word: &$WORD) -> Result<(), SpiError> {
                     if self.registers.status().read().done().bit() {
                         unsafe {
                             self.registers.mosi().write(|w| w.bits(*word as u32));
@@ -63,7 +63,7 @@ macro_rules! spi {
                                 });
                             }
                             while !self.is_done() {}
-                            *buf = self.registers.miso().read().bits() as u8;
+                            *buf = self.registers.miso().read().bits() as $WORD;
                         }
                         Ok(())
                     } else {
@@ -71,7 +71,7 @@ macro_rules! spi {
                     }
                 }
 
-                fn write_priv(&mut self, words: &[u8]) -> Result<(), SpiError> {
+                fn write_priv(&mut self, words: &[$WORD]) -> Result<(), SpiError> {
                     if self.registers.status().read().done().bit() {
                         for word in words.iter() {
                             self.write_one(word)?;
@@ -90,7 +90,7 @@ macro_rules! spi {
 
                         self.write_one(&wb)?;
                         while !self.is_done() {}
-                        let rb = self.registers.miso().read().bits() as u8;
+                        let rb = self.registers.miso().read().bits() as $WORD;
                         if let Some(r) = read.get_mut(i) {
                             *r = rb;
                         }
@@ -98,12 +98,12 @@ macro_rules! spi {
                     Ok(())
                 }
 
-                fn transfer_in_place_priv(&mut self, words: &mut [u8]) -> Result<(), SpiError> {
+                fn transfer_in_place_priv(&mut self, words: &mut [$WORD]) -> Result<(), SpiError> {
                     if self.is_done() {
                         for word in words.iter_mut() {
                             self.write_one(word)?;
                             while !self.is_done() {}
-                            *word = self.registers.miso().read().bits() as u8;
+                            *word = self.registers.miso().read().bits() as $WORD;
                         }
                         Ok(())
                     } else {
