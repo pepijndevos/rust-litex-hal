@@ -18,7 +18,7 @@ vcell = "0.1"
 riscv-rt = { optional = true, version = "0.12" }
 
 [build-dependencies]
-svd2rust = { version = "0.33", default-features = false }
+svd2rust = { version = "0.35", default-features = false }
 
 [features]
 default = ["rt"]
