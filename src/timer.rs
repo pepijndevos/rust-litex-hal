@@ -20,9 +20,11 @@ macro_rules! timer {
                 }
             }
 
-            impl<UXX: core::convert::Into<u32>> $crate::hal::blocking::delay::DelayMs<UXX> for $TIMERX {
-                fn delay_ms(&mut self, ms: UXX) -> () {
-                    let value: u32 = self.sys_clk / 1_000 * ms.into();
+            impl $crate::hal::delay::DelayNs for $TIMERX {
+                fn delay_ns(&mut self, ns: u32) -> () {
+                    let nanos_per_clk: u32 = 1_000_000_000 / self.sys_clk;
+                    // Round up to nearest clock cycle increment.
+                    let value: u32 =  (ns / nanos_per_clk) + 1;
                     unsafe {
                         self.registers.en().write(|w| w.bits(0));
                         self.registers.reload().write(|w| w.bits(0));

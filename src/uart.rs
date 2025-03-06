@@ -9,6 +9,21 @@ macro_rules! uart {
                 registers: $PACUARTX,
             }
 
+            #[derive(Debug)]
+            pub enum UartError {
+                InvalidState
+            }
+
+            impl $crate::hal_io::Error for UartError {
+                fn kind(&self) -> $crate::hal_io::ErrorKind {
+                    $crate::hal_io::ErrorKind::Other
+                }
+            }
+
+            impl $crate::hal_io::ErrorType for $UARTX {
+                type Error = UartError;
+            }
+
             impl $UARTX {
                 pub fn new(registers: $PACUARTX) -> Self {
                     Self { registers }
@@ -17,55 +32,50 @@ macro_rules! uart {
                 pub fn free(self) -> $PACUARTX {
                     self.registers
                 }
-            }
 
-            impl $crate::hal::serial::Write<u8> for $UARTX {
-                type Error = core::convert::Infallible;
+                fn tx_ready(&self) -> bool {
+                    self.registers.txfull().read().bits() == 0
+                }
 
-                fn write(&mut self, word: u8) -> $crate::nb::Result<(), Self::Error> {
+                fn write_char(&mut self, word: &u8) -> () {
+
                     // Wait until TXFULL is `0`
-                    if self.registers.txfull().read().bits() != 0 {
-                        Err($crate::nb::Error::WouldBlock)
-                    } else {
-                        unsafe {
-                            self.registers.rxtx().write(|w| w.rxtx().bits(word.into()));
-                        }
-                        Ok(())
-                    }
-                }
-                fn flush(&mut self) -> $crate::nb::Result<(), Self::Error> {
-                    if self.registers.txempty().read().bits() != 0 {
-                        Ok(())
-                    } else {
-                        Err($crate::nb::Error::WouldBlock)
+                    while !self.tx_ready() {}
+                    unsafe {
+                        self.registers.rxtx().write(|w| w.rxtx().bits(*word));
                     }
                 }
             }
 
-            impl $crate::hal::serial::Read<u8> for $UARTX {
-                type Error = core::convert::Infallible;
 
-                fn read(&mut self) -> $crate::nb::Result<u8, Self::Error> {
-                    // Wait until RXEMPTY is `0`
-                    if self.registers.rxempty().read().bits() != 0 {
-                        Err($crate::nb::Error::WouldBlock)
-                    } else {
-                        let result = unsafe {
-                            Ok(self.registers.rxtx().read().bits() as u8)
+            impl $crate::hal_io::Write for $UARTX {
+
+                fn write(&mut self, buf: &[u8]) -> Result<usize, Self::Error> {
+                    for word in buf.iter() {
+                        self.write_char(word);
+                    }
+                    Ok(buf.len())
+                }
+                fn flush(&mut self) -> Result<(), Self::Error> {
+                    while !self.tx_ready() {}
+                    Ok(())
+                }
+            }
+
+            impl $crate::hal_io::Read for $UARTX {
+
+                fn read(&mut self, buf: &mut [u8]) -> Result<usize, Self::Error> {
+                    let mut i = 0;
+                    for word in buf.iter_mut() {
+                        while self.registers.rxempty().read().bits() != 0 {}
+
+                        *word = unsafe {
+                            self.registers.rxtx().read().bits() as u8
                         };
                         self.registers.ev_pending().write(|w| w.rx().set_bit());
-                        return result;
+                        i += 1;
                     }
-                }
-            }
-
-            impl $crate::hal::blocking::serial::write::Default<u8> for $UARTX {}
-
-            impl core::fmt::Write for $UARTX {
-                fn write_str(&mut self, s: &str) -> core::fmt::Result {
-                    use $crate::hal::prelude::*;
-                    self.bwrite_all(s.as_bytes()).ok();
-                    Ok(())
+                    Ok(i)
                 }
             }
 
