@@ -112,9 +112,9 @@ macro_rules! spi {
                 }
             }
 
-            impl $crate::hal::spi::SpiDevice<u8> for $SPIX {
+            impl $crate::hal::spi::SpiDevice<$WORD> for $SPIX {
 
-                fn transaction(&mut self, operations: &mut [$crate::hal::spi::Operation<'_, u8>]) -> Result<(), Self::Error> {
+                fn transaction(&mut self, operations: &mut [$crate::hal::spi::Operation<'_, $WORD>]) -> Result<(), Self::Error> {
                     for op in operations {
                         match op {
                             $crate::hal::spi::Operation::Read(buf) => self.read_priv(buf)?,
