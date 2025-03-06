@@ -41,7 +41,7 @@ macro_rules! spi {
                         unsafe {
                             self.registers.mosi().write(|w| w.bits(*word as u32));
                             self.registers.control().write(|w| {
-                                w.length().bits(8).start().bit(true)
+                                w.length().bits(std::mem::size_of::<$WORD>()).start().bit(true)
                             });
                         }
                         Ok(())
@@ -59,7 +59,7 @@ macro_rules! spi {
                         for buf in bufs.iter_mut() {
                             unsafe {
                                 self.registers.control().write(|w| {
-                                    w.length().bits(8).start().bit(true)
+                                    w.length().bits(std::mem::size_of::<$WORD>()).start().bit(true)
                                 });
                             }
                             while !self.is_done() {}
