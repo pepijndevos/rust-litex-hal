@@ -1,7 +1,7 @@
 #[macro_export]
 macro_rules! spi {
     ($(
-        $SPIX:ident: ($PACSPIX:ty, $WORD:ty),
+        $SPIX:ident: ($PACSPIX:ty, $WORD:ty, $LENGTH:tt),
     )+) => {
         $(
             #[derive(Debug)]
@@ -41,7 +41,7 @@ macro_rules! spi {
                         unsafe {
                             self.registers.mosi().write(|w| w.bits(*word as u32));
                             self.registers.control().write(|w| {
-                                w.length().bits(core::mem::size_of::<$WORD>()).start().bit(true)
+                                w.length().bits($LENGTH).start().bit(true)
                             });
                         }
                         Ok(())
@@ -59,7 +59,7 @@ macro_rules! spi {
                         for buf in bufs.iter_mut() {
                             unsafe {
                                 self.registers.control().write(|w| {
-                                    w.length().bits(core::mem::size_of::<$WORD>()).start().bit(true)
+                                    w.length().bits($LENGTH).start().bit(true)
                                 });
                             }
                             while !self.is_done() {}
