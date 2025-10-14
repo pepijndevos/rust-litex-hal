@@ -24,6 +24,3 @@ panic-halt = "1.0.0"
 
 [workspace]
 members = ["litex-sim-pac", "xtask"]
-
-[features]
-litei2c = []

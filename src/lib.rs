@@ -5,7 +5,6 @@ pub mod spi;
 pub mod timer;
 pub mod uart;
 
-#[cfg(feature="litei2c")]
 pub mod litei2cmaster;
 
 pub use embedded_hal as hal;
