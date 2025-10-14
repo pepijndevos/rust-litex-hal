@@ -135,8 +135,6 @@ macro_rules! litei2cmaster {
 
                             write_next_read_op = false;
 
-                            println!("New operation...");
-
                             match operation {
                                 $crate::hal::i2c::Operation::Read(read_buffer) => {
                                     len_rx_buf = read_buffer.len();
@@ -149,10 +147,7 @@ macro_rules! litei2cmaster {
 
                             }
 
-                            println!("len_rx_buf {} len_tx_buf {}", len_rx_buf, len_tx_buf);
-
                             if len_rx_buf > 255 || len_rx_buf > 255 {
-                                println!("Operation too large! Exiting.");
                                 break;
                             }
 
@@ -173,8 +168,6 @@ macro_rules! litei2cmaster {
                                         len_rx = u8::try_from(len_rx_buf - rx_j).unwrap();
                                     }
                                 }
-
-                                println!("len_rx {} len_tx {}", len_rx, len_tx);
 
                                 tx_buf = 0;
 
@@ -204,7 +197,7 @@ macro_rules! litei2cmaster {
                                             tx_buf |= write_buffer[0 + tx_j] as u32;
                                             tx_j = tx_j.checked_add(1).unwrap();
                                         }
-                                        _ => { panic!("Invalid len_tx"); }
+                                        _ => { panic!(); }
                                     };
 
                                     },
@@ -226,7 +219,6 @@ macro_rules! litei2cmaster {
                                 //Abort if NACK is received
                                 if self.registers.master_status().read().nack().bit() {
 
-                                    println!("Error - NACK Data received!");
                                     self.registers.master_active().write(|w| unsafe { w.bits(0) });
 
                                     return Err(LiteI2CError::NACK);
@@ -241,8 +233,6 @@ macro_rules! litei2cmaster {
                                      match operation {
 
                                         $crate::hal::i2c::Operation::Read(read_buffer) => {
-
-                                            println!("Current operation is read...directly setting data");
 
                                             match len_rx {
                                                 5 | 4 => {
@@ -267,7 +257,7 @@ macro_rules! litei2cmaster {
                                                     read_buffer[0 + rx_j] = rx_buf as u8;
                                                     rx_j = rx_j.checked_add(1).unwrap();
                                                 }
-                                                _ => { panic!("Invalid len_rx"); }
+                                                _ => { panic!(); }
                                             };
                                         },
                                         _ => { }
@@ -276,7 +266,6 @@ macro_rules! litei2cmaster {
                                 }
 
                                 if (tx_j >= len_tx_buf) || (rx_j >= len_rx_buf) {
-                                    println!("Operation finished, going to next one.");
                                     break;
                                 }
 
@@ -284,7 +273,6 @@ macro_rules! litei2cmaster {
 
                         }
                         else {
-                            println!("All operations processed.");
                             break;
                         }
 
