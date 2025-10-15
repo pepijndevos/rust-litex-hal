@@ -1,5 +1,4 @@
 [advisories]
-unmaintained = "deny"
 yanked = "deny"
 notice = "deny"
 
