@@ -1,6 +1,17 @@
 [advisories]
 yanked = "deny"
 
+[licenses]
+# Acceptable license list: MIT, Apache-2.0, BSD, etc.
+allow = [
+    "MIT",
+    "Apache-2.0",
+    "BSD-3-Clause",
+    "BSD-2-Clause",
+    "Zlib",
+    "ISC"
+]
+
 [[licenses.clarify]]
 name = "stretch"
 expression = "MIT"
