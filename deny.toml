@@ -1,10 +1,5 @@
 [advisories]
 yanked = "deny"
-notice = "deny"
-
-[licenses]
-copyleft = "deny"
-allow-osi-fsf-free = "either"
 
 [[licenses.clarify]]
 name = "stretch"
