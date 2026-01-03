@@ -1,16 +1,25 @@
 [advisories]
-unmaintained = "deny"
+# Only check workspace crates for unmaintained status
+# (transitive deps like 'paste' from riscv are outside our control)
+unmaintained = "workspace"
+# Deny yanked crate versions
 yanked = "deny"
-notice = "deny"
 
 [licenses]
-copyleft = "deny"
-allow-osi-fsf-free = "either"
-
-[[licenses.clarify]]
-name = "stretch"
-expression = "MIT"
-license-files = []
+# Explicitly allow common permissive licenses
+# The old 'copyleft' and 'allow-osi-fsf-free' fields were removed
+unused-allowed-license = "allow"
+allow = [
+  "MIT",
+  "Apache-2.0",
+  "BSD-2-Clause",
+  "BSD-3-Clause",
+  "ISC",
+  "Zlib",
+  "CC0-1.0",
+  "Unlicense",
+  "Unicode-3.0",
+]
 
 [bans]
 multiple-versions = "allow"
