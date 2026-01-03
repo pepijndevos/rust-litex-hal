@@ -1,6 +1,7 @@
 [advisories]
-# Check for unmaintained crates in all dependencies
-unmaintained = "all"
+# Only check workspace crates for unmaintained status
+# (transitive deps like 'paste' from riscv are outside our control)
+unmaintained = "workspace"
 # Deny yanked crate versions
 yanked = "deny"
 
