@@ -14,6 +14,16 @@ macro_rules! uart {
                 InvalidState
             }
 
+            impl core::fmt::Display for UartError {
+                fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+                    match self {
+                        UartError::InvalidState => write!(f, "invalid state"),
+                    }
+                }
+            }
+
+            impl core::error::Error for UartError {}
+
             impl $crate::hal_io::Error for UartError {
                 fn kind(&self) -> $crate::hal_io::ErrorKind {
                     $crate::hal_io::ErrorKind::Other
